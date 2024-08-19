@@ -1,10 +1,9 @@
 from docx import Document
 import pandas as pd
-from openpyxl import load_workbook
-from openpyxl.styles import Alignment
+# from openpyxl import load_workbook
+# from openpyxl.styles import Alignment
 
 def extract_headings(docpath):
-    """Extracts headings and associated information from a Word document."""
     doc = Document(docpath)
     headings = []
     current_heading = None
@@ -28,7 +27,6 @@ def extract_headings(docpath):
     return headings
 
 def prepare_excel_data(headings):
-    """Prepares data for writing to Excel."""
     excel_data = []
     for entry in headings:
         heading = entry["University"]
@@ -54,35 +52,33 @@ def prepare_excel_data(headings):
     return excel_data
 
 def save_to_excel(excel_data, excel_file):
-    """Saves the prepared data to an Excel file."""
     # Create a DataFrame with columns
     df = pd.DataFrame(excel_data, columns=["University", "Names", "Roles", "Countries"])
     df.to_excel(excel_file, index=False)
     
-    # Enable text wrapping in Excel and adjust column width with a max width limit
-    wb = load_workbook(excel_file)
-    ws = wb.active
-    max_width = 50  # Set a maximum column width
+    # Enable text wrapping in Excel and adjust column width with a max width limit (optional)
+    # wb = load_workbook(excel_file)
+    # ws = wb.active
+    # max_width = 50  # Set a maximum column width
 
-    for row in ws.iter_rows(min_row=2, max_row=ws.max_row, min_col=1, max_col=4):
-        for cell in row:
-            cell.alignment = Alignment(wrap_text=True)
-            if cell.value:
-                # Calculate the appropriate width but limit to max_width
-                current_width = ws.column_dimensions[cell.column_letter].width
-                new_width = min(len(cell.value) + 2, max_width)
-                ws.column_dimensions[cell.column_letter].width = max(current_width, new_width)
+    # for row in ws.iter_rows(min_row=2, max_row=ws.max_row, min_col=1, max_col=4):
+    #     for cell in row:
+    #         cell.alignment = Alignment(wrap_text=True)
+    #         if cell.value:
+    #             # Calculate the appropriate width but limit to max_width
+    #             current_width = ws.column_dimensions[cell.column_letter].width
+    #             new_width = min(len(cell.value) + 2, max_width)
+    #             ws.column_dimensions[cell.column_letter].width = max(current_width, new_width)
     
-    wb.save(excel_file)
+    # wb.save(excel_file)
     print(f"Excel file has been saved to {excel_file}")
 
 def main(docpath, excel_file):
-    """Main function to process the Word document and save the data to Excel."""
     headings = extract_headings(docpath)
     excel_data = prepare_excel_data(headings)
     save_to_excel(excel_data, excel_file)
 
 # Run the script
-docpath = r'C:\Users\UNICK\OneDrive\Documents\KakaoTalk Downloads\새 Microsoft Word 문서.docx'
-excel_file = r'Y:\excel\excel_file.xlsx'
+docpath = r'X:\input.docx'
+excel_file = r'X:\output.xlsx'
 main(docpath, excel_file)
